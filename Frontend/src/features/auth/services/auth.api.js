@@ -1,8 +1,9 @@
 import axios from "axios"
 
 
+/* same origin as the app, the dev server proxies /api to the backend */
 const api = axios.create({
-    baseURL: "http://localhost:3000",
+    baseURL: "",
     withCredentials: true
 })
 

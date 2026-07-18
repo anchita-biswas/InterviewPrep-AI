@@ -3,6 +3,19 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const tokenBlacklistModel = require("../models/blacklist.model");
 
+/* secure in production only, so http://localhost still works in development */
+const cookieOptions = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "lax",
+};
+
+/* clearCookie must not receive maxAge, it sets its own expiry */
+const sessionCookieOptions = {
+  ...cookieOptions,
+  maxAge: 24 * 60 * 60 * 1000, // 1 day, matches the JWT expiry
+};
+
 // Register Controller:-
 /**
  * @name registerUserController
@@ -38,11 +51,11 @@ async function registerUserController(req, res) {
 
   const token = jwt.sign(
     { id: user._id, username: user.username },
-    process.env.JWT_Secret,
+    process.env.JWT_SECRET,
     { expiresIn: "1d" },
   );
 
-  res.cookie("token", token);
+  res.cookie("token", token, sessionCookieOptions);
 
   res.status(201).json({
     message: "User registered successfully",
@@ -84,11 +97,11 @@ async function loginUserController(req, res) {
 
   const token = jwt.sign(
     { id: user._id, username: user.username },
-    process.env.JWT_Secret,
+    process.env.JWT_SECRET,
     { expiresIn: "1d" },
   );
 
-  res.cookie("token", token);
+  res.cookie("token", token, sessionCookieOptions);
   res.status(200).json({
     message: "User loggedIn successfully.",
     user: {
@@ -115,7 +128,7 @@ async function logoutUserController(req, res) {
     await tokenBlacklistModel.create({ token });
   }
 
-  res.clearCookie("token");
+  res.clearCookie("token", cookieOptions);
 
   res.status(200).json({
     message: "User logged out successfully",

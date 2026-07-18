@@ -1,0 +1,13 @@
+{
+  "name": "interviewprep-ai",
+  "version": "1.0.0",
+  "description": "AI-powered interview preparation platform",
+  "private": true,
+  "scripts": {
+    "build": "npm install --prefix Backend && npm install --prefix Frontend && npm run build --prefix Frontend",
+    "start": "node Backend/server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
