@@ -4,10 +4,10 @@
   "description": "AI-powered interview preparation platform",
   "private": true,
   "scripts": {
-    "build": "npm install --prefix Backend && npm install --prefix Frontend && npm run build --prefix Frontend",
+    "build": "npm install --prefix Backend && npm install --include=dev --prefix Frontend && npm run build --prefix Frontend",
     "start": "node Backend/server.js"
   },
   "engines": {
-    "node": ">=20"
+    "node": "22.x"
   }
 }
